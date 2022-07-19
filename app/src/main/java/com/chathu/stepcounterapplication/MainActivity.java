@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager sensorManager;
     private Sensor mStepCounter;
     private boolean isCounterSensorPresent;
+    int stepCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-
+        if (sensorEvent.sensor == mStepCounter)
+        {
+            stepCount = (int) sensorEvent.values[0];
+        }
     }
 
     @Override
@@ -52,5 +56,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) !=null)
             sensorManager.registerListener(this,mStepCounter,SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) !=null)
+            sensorManager.unregisterListener(this, mStepCounter);
     }
 }
