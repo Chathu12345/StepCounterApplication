@@ -3,12 +3,14 @@ package com.chathu.stepcounterapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
     private TextView textViewStepCounter, textViewStepDetector;
     private SensorManager sensorManager;
     private Sensor mStepCounter;
@@ -29,6 +31,26 @@ public class MainActivity extends AppCompatActivity {
         {
             mStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             isCounterSensorPresent = true;
+        } else {
+            textViewStepCounter.setText("Sensor not found");
+            isCounterSensorPresent = false;
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) !=null)
+            sensorManager.registerListener(this,mStepCounter,SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
